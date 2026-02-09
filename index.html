@@ -322,19 +322,19 @@
         // PASO 4: Reemplaza estos valores con los tuyos:
         
         const CONFIG = {
-            PUBLIC_KEY: "TU_PUBLIC_KEY_AQUI",      // Tu Public Key de EmailJS
-            SERVICE_ID: "TU_SERVICE_ID_AQUI",      // Tu Service ID
-            TEMPLATE_ID: "TU_TEMPLATE_ID_AQUI"     // Tu Template ID
+            PUBLIC_KEY: "VIVtFQkyOASbNCQfl",      // Tu Public Key de EmailJS
+            SERVICE_ID: "service_3klautu",      // Tu Service ID
+            TEMPLATE_ID: "template_iehssaf"     // Tu Template ID
         };
 
         // ============================================
         // VALIDACIÓN DE CONFIGURACIÓN
         // ============================================
-        function isConfigured() {
-            return CONFIG.PUBLIC_KEY !== "VIVtFQkyOASbNCQfl" ,
-                   CONFIG.SERVICE_ID !== "service_e4fgw6a" ,
-                   CONFIG.TEMPLATE_ID !== "template_v1jy70h"
-        };
+       function isConfigured() {
+            return CONFIG.PUBLIC_KEY !== "TU_PUBLIC_KEY_AQUI" && 
+                   CONFIG.SERVICE_ID !== "TU_SERVICE_ID_AQUI" && 
+                   CONFIG.TEMPLATE_ID !== "TU_TEMPLATE_ID_AQUI";
+        }
 
         // Inicializar EmailJS solo si está configurado
         if (isConfigured()) {

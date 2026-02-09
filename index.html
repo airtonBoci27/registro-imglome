@@ -6,7 +6,8 @@
     <title>Registro - Jornada Científica Internacional | IMGLOME</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -65,11 +66,25 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Estilo específico para que el QR no rompa el diseño */
-        #qrcode img {
-            margin: 0 auto;
-            border: 10px solid white;
-            border-radius: 1rem;
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #22d3ee;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
         }
     </style>
 </head>
@@ -138,14 +153,14 @@
                         <div class="flex gap-2">
                             <div class="w-1/3">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tipo</label>
-                                <select class="input-glass w-full rounded-xl p-3 text-sm">
+                                <select id="input-tipo-doc" class="input-glass w-full rounded-xl p-3 text-sm">
                                     <option>DNI</option>
                                     <option>C.E.</option>
                                 </select>
                             </div>
                             <div class="w-2/3">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Número</label>
-                                <input type="number" required placeholder="00000000" class="input-glass w-full rounded-xl p-3 text-sm">
+                                <input type="number" id="input-numero-doc" required placeholder="00000000" class="input-glass w-full rounded-xl p-3 text-sm">
                             </div>
                         </div>
                         <div>
@@ -157,33 +172,33 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-left">
                         <div>
                             <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Apellido Paterno</label>
-                            <input type="text" id="input-nombre" required placeholder="Ej. Perez" class="input-glass w-full rounded-xl p-3 text-sm">
+                            <input type="text" id="input-apellido-paterno" required placeholder="Ej. Perez" class="input-glass w-full rounded-xl p-3 text-sm">
                         </div>
                         <div>
                             <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Apellido Materno</label>
-                            <input type="text" id="input-nombre" required placeholder="Ej. Hidalgo" class="input-glass w-full rounded-xl p-3 text-sm">
+                            <input type="text" id="input-apellido-materno" required placeholder="Ej. Hidalgo" class="input-glass w-full rounded-xl p-3 text-sm">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-left">
                         <div>
                             <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Celular</label>
-                            <input type="tel" required placeholder="999 999 999" class="input-glass w-full rounded-xl p-3 text-sm">
+                            <input type="tel" id="input-celular" required placeholder="999 999 999" class="input-glass w-full rounded-xl p-3 text-sm">
                         </div>
                         <div>
                             <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Cargo</label>
-                            <input type="text" required placeholder="Ej. Médico" class="input-glass w-full rounded-xl p-3 text-sm">
+                            <input type="text" id="input-cargo" required placeholder="Ej. Médico" class="input-glass w-full rounded-xl p-3 text-sm">
                         </div>
                     </div>
 
                     <div class="text-left">
                         <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Email</label>
-                        <input type="email" required placeholder="doctor@ejemplo.com" class="input-glass w-full rounded-xl p-3 text-sm">
+                        <input type="email" id="input-email" required placeholder="doctor@ejemplo.com" class="input-glass w-full rounded-xl p-3 text-sm">
                     </div>
 
                     <div class="text-left">
                         <label class="text-[10px] font-bold text-cyan-400 uppercase ml-1 mb-1 block">Especialidad</label>
-                        <select required class="input-glass w-full rounded-xl p-3.5 text-sm appearance-none cursor-pointer">
+                        <select id="input-especialidad" required class="input-glass w-full rounded-xl p-3.5 text-sm appearance-none cursor-pointer">
                             <option value="" disabled selected>Seleccione Especialidad</option>
                             <option>Medicina Física y Rehabilitación</option>
                             <option>Terapia Física y Rehabilitación</option>
@@ -195,34 +210,102 @@
                     <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-6 text-left">
                         <div class="flex gap-8">
                             <label class="flex items-center gap-2 cursor-pointer text-white text-sm group">
-                                <input type="radio" name="role" class="accent-cyan-400 w-4 h-4" checked> 
+                                <input type="radio" name="role" value="Visitante" class="accent-cyan-400 w-4 h-4" checked> 
                                 <span class="group-hover:text-cyan-400 transition-colors">Visitante</span>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer text-white text-sm group">
-                                <input type="radio" name="role" class="accent-cyan-400 w-4 h-4"> 
+                                <input type="radio" name="role" value="Profesional de la salud" class="accent-cyan-400 w-4 h-4"> 
                                 <span class="group-hover:text-cyan-400 transition-colors">Profesional de la salud</span>
                             </label>
                         </div>
                         
-                        <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-cyan-400 to-blue-600 px-14 py-5 rounded-2xl font-bold uppercase tracking-widest text-xs shadow-lg shadow-cyan-500/30 hover:brightness-110 hover:scale-105 active:scale-95 transition-all">
+                        <button type="submit" id="submit-btn" class="w-full md:w-auto bg-gradient-to-r from-cyan-400 to-blue-600 px-14 py-5 rounded-2xl font-bold uppercase tracking-widest text-xs shadow-lg shadow-cyan-500/30 hover:brightness-110 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                             Confirmar Asistencia
                         </button>
                     </div>
                 </form>
             </div>
 
+            <!-- Vista de carga -->
+            <div id="loading-view" class="hidden text-center space-y-6 py-20">
+                <div class="spinner mx-auto"></div>
+                <h2 class="text-2xl font-bold text-white">Procesando registro...</h2>
+                <p class="text-gray-400 text-sm">Estamos enviando tu confirmación por correo</p>
+                <div class="flex items-center justify-center gap-2 text-cyan-400 text-xs pulse">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Esto puede tardar unos segundos</span>
+                </div>
+            </div>
+
+            <!-- Vista de éxito -->
             <div id="success-view" class="hidden text-center space-y-6 animate-in py-10">
-                <div class="bg-green-500/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-green-400 mb-2">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                <div class="bg-green-500/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto text-green-400 mb-4">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                 </div>
                 <h2 class="text-3xl font-800 text-white">¡Registro Exitoso!</h2>
-                <p class="text-gray-300 text-sm">Hola <span id="display-name" class="text-cyan-400 font-bold"></span>, <br> tu pase digital ha sido generado.</p>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-md mx-auto">
+                    <p class="text-gray-300 text-base mb-4">
+                        Hola <span id="display-name" class="text-cyan-400 font-bold"></span>,
+                    </p>
+                    <div class="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-6 mb-4">
+                        <svg class="w-12 h-12 text-cyan-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <p class="text-white font-semibold mb-2">Confirmación enviada</p>
+                        <p class="text-gray-400 text-sm">
+                            Hemos enviado un correo de confirmación a:<br>
+                            <span id="display-email" class="text-cyan-400 font-mono text-xs break-all"></span>
+                        </p>
+                    </div>
+                    <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-left">
+                        <div class="flex gap-3">
+                            <svg class="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            <p class="text-gray-400 text-xs">
+                                <strong class="text-yellow-400">Importante:</strong> Revisa tu bandeja de entrada y la carpeta de <strong>spam/correo no deseado</strong>. Si no lo encuentras, espera unos minutos.
+                            </p>
+                        </div>
+                    </div>
+                </div>
                 
-                <div id="qrcode" class="p-4 bg-white/5 rounded-3xl inline-block border border-white/10 shadow-2xl"></div>
+                <div class="pt-4 space-y-3">
+                    <button onclick="location.reload()" class="bg-white/10 hover:bg-white/20 text-white px-10 py-4 rounded-full text-xs font-bold uppercase tracking-widest transition-all block mx-auto">
+                        Nuevo Registro
+                    </button>
+                    <p class="text-gray-500 text-xs">¿No recibiste el correo? Verifica tu conexión o inténtalo nuevamente</p>
+                </div>
+            </div>
+
+            <!-- Vista de error -->
+            <div id="error-view" class="hidden text-center space-y-6 animate-in py-10">
+                <div class="bg-red-500/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto text-red-400 mb-4">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
+                </div>
+                <h2 class="text-3xl font-800 text-white">Error en el envío</h2>
+                <div class="bg-red-500/10 border border-red-500/30 rounded-2xl p-6 max-w-md mx-auto">
+                    <p class="text-gray-300 text-sm mb-4">
+                        No pudimos enviar el correo de confirmación en este momento.
+                    </p>
+                    <div class="text-left space-y-2 text-xs text-gray-400">
+                        <p><strong class="text-red-400">Posibles causas:</strong></p>
+                        <ul class="list-disc list-inside space-y-1 ml-2">
+                            <li>Problema de conexión a internet</li>
+                            <li>Email ingresado incorrectamente</li>
+                            <li>Servicio de correo temporalmente no disponible</li>
+                        </ul>
+                    </div>
+                </div>
                 
-                <div class="pt-6">
-                    <p class="text-[10px] text-gray-500 uppercase tracking-[0.3em] mb-4">Muestra este QR al ingresar al evento</p>
-                    <button onclick="window.print()" class="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all">Descargar Pase</button>
+                <div class="pt-4 flex flex-col md:flex-row gap-3 justify-center">
+                    <button onclick="location.reload()" class="bg-red-500/20 hover:bg-red-500/30 text-white px-8 py-4 rounded-full text-xs font-bold uppercase tracking-widest transition-all">
+                        Intentar de nuevo
+                    </button>
+                    <a href="mailto:contacto@imglome.com" class="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full text-xs font-bold uppercase tracking-widest transition-all inline-block">
+                        Contactar soporte
+                    </a>
                 </div>
             </div>
 
@@ -230,36 +313,146 @@
     </main>
 
     <script>
-        // LÓGICA DE INTERCAMBIO DE VISTAS Y QR
+        // ============================================
+        // CONFIGURACIÓN DE EMAILJS
+        // ============================================
+        // PASO 1: Crea tu cuenta gratis en https://www.emailjs.com/
+        // PASO 2: Configura un servicio de email (Gmail, Outlook, etc.)
+        // PASO 3: Crea una plantilla de correo
+        // PASO 4: Reemplaza estos valores con los tuyos:
+        
+        const CONFIG = {
+            PUBLIC_KEY: "TU_PUBLIC_KEY_AQUI",      // Tu Public Key de EmailJS
+            SERVICE_ID: "TU_SERVICE_ID_AQUI",      // Tu Service ID
+            TEMPLATE_ID: "TU_TEMPLATE_ID_AQUI"     // Tu Template ID
+        };
+
+        // ============================================
+        // VALIDACIÓN DE CONFIGURACIÓN
+        // ============================================
+        function isConfigured() {
+            return CONFIG.PUBLIC_KEY !== "VIVtFQkyOASbNCQfl" ,
+                   CONFIG.SERVICE_ID !== "service_e4fgw6a" ,
+                   CONFIG.TEMPLATE_ID !== "template_v1jy70h"
+        };
+
+        // Inicializar EmailJS solo si está configurado
+        if (isConfigured()) {
+            emailjs.init(CONFIG.PUBLIC_KEY);
+        } else {
+            console.warn('⚠️ EmailJS no está configurado. Por favor, lee la GUIA-CONFIGURACION.md');
+        }
+
+        // ============================================
+        // LÓGICA DEL FORMULARIO
+        // ============================================
         const form = document.getElementById('form-imglome');
+        const submitBtn = document.getElementById('submit-btn');
         const regView = document.getElementById('registration-view');
+        const loadingView = document.getElementById('loading-view');
         const successView = document.getElementById('success-view');
+        const errorView = document.getElementById('error-view');
 
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const nombre = document.getElementById('input-nombre').value;
             
-            // 1. Mostrar nombre en el ticket
-            document.getElementById('display-name').innerText = nombre;
-            
-            // 2. Generar el QR
-            const qrcodeContainer = document.getElementById("qrcode");
-            qrcodeContainer.innerHTML = ""; // Limpiar antes de generar
-            new QRCode(qrcodeContainer, {
-                text: "IMGLOME-2026-" + nombre.toUpperCase().replace(/\s/g, "-"),
-                width: 160,
-                height: 160,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
+            // Verificar configuración
+            if (!isConfigured()) {
+                alert('⚠️ El servicio de correo no está configurado.\n\nPor favor, configura EmailJS siguiendo la guía GUIA-CONFIGURACION.md\n\nNecesitas:\n- Public Key\n- Service ID\n- Template ID');
+                return;
+            }
 
-            // 3. Cambiar vistas
+            // Deshabilitar botón
+            submitBtn.disabled = true;
+            
+            // Obtener datos del formulario
+            const formData = {
+                tipo_documento: document.getElementById('input-tipo-doc').value,
+                numero_documento: document.getElementById('input-numero-doc').value,
+                nombre: document.getElementById('input-nombre').value.trim(),
+                apellido_paterno: document.getElementById('input-apellido-paterno').value.trim(),
+                apellido_materno: document.getElementById('input-apellido-materno').value.trim(),
+                celular: document.getElementById('input-celular').value,
+                cargo: document.getElementById('input-cargo').value.trim(),
+                email: document.getElementById('input-email').value.trim(),
+                especialidad: document.getElementById('input-especialidad').value,
+                rol: document.querySelector('input[name="role"]:checked').value
+            };
+
+            // Nombre completo
+            formData.nombre_completo = `${formData.nombre} ${formData.apellido_paterno} ${formData.apellido_materno}`;
+            formData.fecha_registro = new Date().toLocaleString('es-PE', {
+                dateStyle: 'long',
+                timeStyle: 'short'
+            });
+            
+            // Mostrar vista de carga
             regView.classList.add('hidden');
-            successView.classList.remove('hidden');
+            loadingView.classList.remove('hidden');
+            
+            try {
+                // Enviar correo usando EmailJS
+                const response = await emailjs.send(
+                    CONFIG.SERVICE_ID,
+                    CONFIG.TEMPLATE_ID,
+                    {
+                        to_email: formData.email,
+                        to_name: formData.nombre_completo,
+                        nombre: formData.nombre,
+                        apellido_paterno: formData.apellido_paterno,
+                        apellido_materno: formData.apellido_materno,
+                        documento: `${formData.tipo_documento}: ${formData.numero_documento}`,
+                        celular: formData.celular,
+                        cargo: formData.cargo,
+                        especialidad: formData.especialidad,
+                        rol: formData.rol,
+                        fecha_registro: formData.fecha_registro
+                    }
+                );
+                
+                console.log('✅ Correo enviado exitosamente:', response);
+                
+                // Guardar registro en localStorage (opcional, para tu control)
+                saveRegistrationLocally(formData);
+                
+                // Mostrar vista de éxito
+                loadingView.classList.add('hidden');
+                successView.classList.remove('hidden');
+                document.getElementById('display-name').innerText = formData.nombre;
+                document.getElementById('display-email').innerText = formData.email;
+                
+            } catch (error) {
+                console.error('❌ Error al enviar el correo:', error);
+                
+                // Mostrar vista de error
+                loadingView.classList.add('hidden');
+                errorView.classList.remove('hidden');
+            } finally {
+                // Rehabilitar botón
+                submitBtn.disabled = false;
+            }
         });
 
-        // Partículas 
+        // ============================================
+        // GUARDAR REGISTRO LOCALMENTE (OPCIONAL)
+        // ============================================
+        function saveRegistrationLocally(data) {
+            try {
+                let registros = JSON.parse(localStorage.getItem('registros_imglome') || '[]');
+                registros.push({
+                    ...data,
+                    timestamp: Date.now()
+                });
+                localStorage.setItem('registros_imglome', JSON.stringify(registros));
+                console.log('💾 Registro guardado localmente');
+            } catch (e) {
+                console.warn('No se pudo guardar localmente:', e);
+            }
+        }
+
+        // ============================================
+        // PARTÍCULAS DE FONDO
+        // ============================================
         particlesJS("particles-js", {
             "particles": {
                 "number": { "value": 90, "density": { "enable": true, "value_area": 800 } },

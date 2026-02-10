@@ -14,6 +14,7 @@
             background-color: #000033;
             margin: 0;
             overflow-x: hidden;
+            overflow-y: auto; 
         }
         #particles-js {
             position: fixed;
@@ -44,9 +45,7 @@
             transition: all 0.3s ease;
             color: white;
         }
-        .input-glass::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
+        .input-glass::placeholder { color: rgba(255, 255, 255, 0.3); }
         .input-glass:focus {
             background: rgba(255, 255, 255, 0.15);
             border-color: #4ade80;
@@ -59,141 +58,151 @@
             filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.4));
             transition: all 0.5s ease;
         }
-
-        .logo-success-anim {
-            animation: logoPulse 1.5s ease-out infinite;
-        }
-
+        .logo-success-anim { animation: logoPulse 1.5s ease-out infinite; }
         @keyframes logoPulse {
             0% { filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.4)); transform: scale(1); }
             50% { filter: drop-shadow(0 0 30px rgba(74, 222, 128, 0.8)); transform: scale(1.05); }
             100% { filter: drop-shadow(0 0 15px rgba(34, 211, 238, 0.4)); transform: scale(1); }
         }
-
+        
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(to right, #4ade80, #22d3ee);
+            transition: width 0.4s ease;
+        }
+        
         .spinner {
             border: 3px solid rgba(255, 255, 255, 0.1);
             border-top: 3px solid #4ade80;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 md:p-10">
+<body class="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 lg:p-12">
 
     <div id="particles-js"></div>
 
-    <main class="relative z-10 w-full max-w-6xl glass rounded-[3rem] overflow-hidden flex flex-col md:flex-row">
+    <main class="relative z-10 w-full max-w-6xl glass rounded-[2rem] md:rounded-[3rem] overflow-hidden flex flex-col md:flex-row">
         
-        <div class="w-full md:w-5/12 p-8 md:p-14 border-b md:border-b-0 md:border-r border-white/10 flex flex-col justify-center bg-white/5">
-            <div class="mb-12 flex justify-center">
-                <img src="logo_jornada.png" id="main-logo" alt="Logo Jornada" class="w-full max-w-xs logo-glow">
+        <div class="w-full md:w-5/12 p-6 md:p-10 lg:p-14 border-b md:border-b-0 md:border-r border-white/10 flex flex-col justify-center bg-white/5">
+            <div class="mb-8 md:mb-12 flex justify-center">
+                <img src="logo_jornada.png" id="main-logo" alt="Logo Jornada" class="w-2/3 md:w-full max-w-[280px] md:max-xs logo-glow">
             </div>
 
-             <div class="space-y-4">
-                <a href="http://googleusercontent.com/maps.google.com/6" target="_blank" class="info-card p-6 rounded-3xl flex items-center gap-6 block transition-all hover:border-green-400">
-                    <div class="bg-green-500/20 p-4 rounded-2xl text-green-400">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+             <div class="space-y-3 md:space-y-4">
+                <a href="http://googleusercontent.com/maps.google.com/9" target="_blank" class="info-card p-4 md:p-6 rounded-2xl md:rounded-3xl flex items-center gap-4 md:gap-6 block transition-all hover:border-green-400">
+                    <div class="bg-green-500/20 p-3 md:p-4 rounded-xl md:rounded-2xl text-green-400 shrink-0">
+                        <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </div>
                     <div>
-                        <p class="text-[10px] uppercase font-bold text-green-400 tracking-widest leading-none mb-1 underline">Ver Ubicación</p>
-                        <p class="text-white text-lg font-semibold leading-tight">Sheraton Lima Historic Center</p>
+                        <p class="text-[9px] md:text-[10px] uppercase font-bold text-green-400 tracking-widest leading-none mb-1 underline">Ver Ubicación</p>
+                        <p class="text-white text-base md:text-lg font-semibold leading-tight">Sheraton Lima Historic Center</p>
                     </div>
                 </a>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="info-card p-6 rounded-3xl flex flex-col justify-center border-l-4 border-l-green-500">
-                        <div class="flex items-center gap-2 mb-2">
-                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            <span class="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Fecha</span>
+                <div class="grid grid-cols-2 gap-3 md:gap-4">
+                    <div class="info-card p-4 md:p-6 rounded-2xl md:rounded-3xl flex flex-col justify-center border-l-4 border-l-green-500">
+                        <div class="flex items-center gap-2 mb-1 md:mb-2">
+                            <svg class="w-4 h-4 md:w-5 md:h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <span class="text-[8px] md:text-[10px] uppercase font-bold text-gray-400 tracking-widest">Fecha</span>
                         </div>
-                        <p class="text-white text-2xl font-800">06 - 07</p>
-                        <p class="text-green-300 text-xs font-semibold uppercase italic">Junio, 2026</p>
+                        <p class="text-white text-xl md:text-2xl font-800 leading-tight">06 - 07</p>
+                        <p class="text-green-300 text-[10px] md:text-xs font-semibold uppercase italic">Junio, 2026</p>
                     </div>
 
-                    <div class="info-card p-6 rounded-3xl flex flex-col justify-center border-l-4 border-l-cyan-500">
-                        <div class="flex items-center gap-2 mb-2">
-                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <span class="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Horario</span>
+                    <div class="info-card p-4 md:p-6 rounded-2xl md:rounded-3xl flex flex-col justify-center border-l-4 border-l-cyan-500">
+                        <div class="flex items-center gap-2 mb-1 md:mb-2">
+                            <svg class="w-4 h-4 md:w-5 md:h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span class="text-[8px] md:text-[10px] uppercase font-bold text-gray-400 tracking-widest">Horario</span>
                         </div>
-                        <div class="flex items-end justify-center gap-2">
+                        <div class="flex items-end justify-center gap-1 md:gap-2">
                             <div class="text-center">
-                                <p class="text-white text-xl font-800 leading-none">08:00</p>
-                                <p class="text-cyan-300 text-[9px] font-semibold uppercase mt-0.5">AM</p>
+                                <p class="text-white text-lg md:text-xl font-800 leading-none">08:00</p>
+                                <p class="text-cyan-300 text-[8px] font-semibold uppercase mt-0.5">AM</p>
                             </div>
-                            <span class="text-white text-xl font-800 pb-2">-</span>
+                            <span class="text-white text-lg md:text-xl font-800 pb-1 md:pb-2">-</span>
                             <div class="text-center">
-                                <p class="text-white text-xl font-800 leading-none">17:00</p>
-                                <p class="text-cyan-300 text-[9px] font-semibold uppercase mt-0.5">PM</p>
+                                <p class="text-white text-lg md:text-xl font-800 leading-none">17:00</p>
+                                <p class="text-cyan-300 text-[8px] font-semibold uppercase mt-0.5">PM</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <p class="mt-auto pt-10 text-white/30 text-[11px] uppercase tracking-[0.4em]">IMGLOME 2026</p>
+            <p class="mt-8 md:mt-auto pt-4 md:pt-10 text-white/30 text-[9px] md:text-[11px] text-center md:text-left uppercase tracking-[0.4em]">IMGLOME 2026</p>
         </div>
 
-        <div class="w-full md:w-7/12 p-8 md:p-14" id="dynamic-content">
+        <div class="w-full md:w-7/12 p-6 md:p-10 lg:p-14" id="dynamic-content">
             
             <div id="registration-view">
-                <h2 class="text-xl font-bold text-white mb-8 flex items-center gap-3 uppercase tracking-widest">
+                <h2 class="text-lg md:text-xl font-bold text-white mb-6 md:mb-8 flex items-center gap-3 uppercase tracking-widest">
                     <span class="text-green-400">Confirmar</span> Asistencia
                     <div class="h-px flex-grow bg-white/10"></div>
                 </h2>
                 
-                <form class="space-y-5" id="form-imglome">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <form class="space-y-4 md:space-y-5" id="form-imglome">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
                         <div class="flex gap-2">
                             <div class="w-1/3">
-                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tipo</label>
-                                <select id="input-tipo-doc" class="input-glass w-full rounded-xl p-3 text-sm">
+                                <label class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase ml-1">Tipo</label>
+                                <select id="input-tipo-doc" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
                                     <option>DNI</option>
                                     <option>C.E.</option>
                                 </select>
                             </div>
                             <div class="w-2/3">
-                                <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Número</label>
-                                <input type="number" id="input-numero-doc" required placeholder="Ej: 74859612" class="input-glass w-full rounded-xl p-3 text-sm">
+                                <label class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase ml-1">Número</label>
+                                <input type="number" id="input-numero-doc" required placeholder="74859612" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
                             </div>
                         </div>
                         <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Nombre</label>
-                            <input type="text" id="input-nombre" required placeholder="Ej: Juan Alberto" class="input-glass w-full rounded-xl p-3 text-sm">
+                            <label class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase ml-1">Nombre</label>
+                            <input type="text" id="input-nombre" required placeholder="Juan Alberto" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
                         <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Ap. Paterno</label>
-                            <input type="text" id="input-apellido-paterno" required placeholder="Ej: García" class="input-glass w-full rounded-xl p-3 text-sm">
+                            <label class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase ml-1">Ap. Paterno</label>
+                            <input type="text" id="input-apellido-paterno" required placeholder="García" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
                         </div>
                         <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Ap. Materno</label>
-                            <input type="text" id="input-apellido-materno" required placeholder="Ej: Mendoza" class="input-glass w-full rounded-xl p-3 text-sm">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Celular</label>
-                            <input type="tel" id="input-celular" required placeholder="Ej: 987 654 321" class="input-glass w-full rounded-xl p-3 text-sm">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Cargo</label>
-                            <input type="text" id="input-cargo" required placeholder="Ej: Director Médico" class="input-glass w-full rounded-xl p-3 text-sm">
+                            <label class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase ml-1">Ap. Materno</label>
+                            <input type="text" id="input-apellido-materno" required placeholder="Mendoza" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
                         </div>
                     </div>
 
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Email</label>
-                        <input type="email" id="input-email" required placeholder="ejemplo@correo.com" class="input-glass w-full rounded-xl p-3 text-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
+                        <div>
+                            <label class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase ml-1">Celular</label>
+                            <input type="tel" id="input-celular" required placeholder="987 654 321" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase ml-1">Cargo</label>
+                            <input type="text" id="input-cargo" required placeholder="Director Médico" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
+                        </div>
                     </div>
 
                     <div>
-                        <label class="text-[10px] font-bold text-green-400 uppercase ml-1 mb-1 block">Especialidad</label>
-                        <select id="input-especialidad" required class="input-glass w-full rounded-xl p-3 text-sm appearance-none">
+                        <label class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase ml-1">Email</label>
+                        <input type="email" id="input-email" required placeholder="ejemplo@correo.com" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
+                    </div>
+
+                    <div>
+                        <label class="text-[9px] md:text-[10px] font-bold text-green-400 uppercase ml-1 mb-1 block">Especialidad</label>
+                        <select id="input-especialidad" required class="input-glass w-full rounded-xl p-3 text-xs md:text-sm appearance-none">
                             <option value="" disabled selected>Seleccione Especialidad</option>
                             <option>Medicina Física y Rehabilitación</option>
                             <option>Terapia Física y Rehabilitación</option>
@@ -202,37 +211,42 @@
                         </select>
                     </div>
 
-                     <div class="flex items-center justify-center pt-6">
-                        <button type="submit" id="submit-btn" class="w-full md:w-auto bg-gradient-to-r from-green-400 to-cyan-600 px-20 py-5 rounded-2xl font-bold uppercase tracking-widest text-xs shadow-lg shadow-green-500/30 hover:brightness-110 hover:scale-105 transition-all">
+                     <div class="flex items-center justify-center pt-4 md:pt-6">
+                        <button type="submit" id="submit-btn" class="w-full md:w-auto bg-gradient-to-r from-green-400 to-cyan-600 px-10 md:px-20 py-4 md:py-5 rounded-2xl font-bold uppercase tracking-widest text-[10px] md:text-xs shadow-lg shadow-green-500/30 hover:brightness-110 hover:scale-105 active:scale-95 transition-all">
                             Confirmar Asistencia
                         </button>
                     </div>
                 </form>
             </div>
 
-            <div id="loading-view" class="hidden text-center space-y-6 py-20">
+            <div id="loading-view" class="hidden text-center space-y-8 py-10 md:py-20">
                 <div class="spinner mx-auto"></div>
-                <h2 class="text-2xl font-bold text-white uppercase tracking-widest">Enviando Datos...</h2>
+                <div class="max-w-xs mx-auto space-y-4">
+                    <h2 id="loading-text" class="text-xl md:text-2xl font-bold text-white uppercase tracking-widest">Validando datos...</h2>
+                    <div class="progress-container">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+                </div>
             </div>
 
-            <div id="success-view" class="hidden text-center space-y-8 py-10">
-                <div class="bg-green-500/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto text-green-400 mb-4 shadow-[0_0_30px_rgba(74,222,128,0.2)]">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            <div id="success-view" class="hidden text-center space-y-6 md:space-y-8 py-6 md:py-10">
+                <div class="bg-green-500/20 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mx-auto text-green-400 mb-4 shadow-[0_0_30px_rgba(74,222,128,0.2)]">
+                    <svg class="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                 </div>
-                <h2 class="text-3xl font-800 text-white uppercase tracking-tighter">¡Registro Exitoso!</h2>
-                <div class="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-md mx-auto">
-                    <p class="text-gray-300">Gracias <span id="display-name" class="text-green-400 font-bold"></span>, los detalles han sido enviados a tu bandeja de entrada.</p>
+                <h2 class="text-2xl md:text-3xl font-800 text-white uppercase tracking-tighter leading-tight">¡Registro Exitoso!</h2>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 max-w-md mx-auto">
+                    <p class="text-gray-300 text-sm md:text-base">Gracias <span id="display-name" class="text-green-400 font-bold"></span>, los detalles han sido enviados a tu bandeja de entrada.</p>
                 </div>
 
                 <div class="space-y-4">
-                    <p class="text-gray-400 text-[10px] uppercase font-bold tracking-[0.2em]">¿Dudas? Contáctanos ahora</p>
-                    <a href="https://wa.me/51900000000?text=Hola,%20acabo%20de%20registrarme%20en%20la%20Jornada%20Científica%20y%20tengo%20una%20consulta." target="_blank" class="inline-flex items-center gap-3 bg-green-400 text-blue-950 px-8 py-4 rounded-xl font-bold transition-all shadow-lg shadow-green-400/20 hover:scale-105 active:scale-95">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    <p class="text-gray-400 text-[9px] md:text-[10px] uppercase font-bold tracking-[0.2em]">¿Dudas? Contáctanos ahora</p>
+                    <a href="https://wa.me/51900000000?text=Hola,%20acabo%20de%20registrarme%20en%20la%20Jornada%20Científica%20y%20tengo%20una%20consulta." target="_blank" class="inline-flex items-center gap-3 bg-green-400 text-blue-950 px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold transition-all shadow-lg shadow-green-400/20 hover:scale-105 active:scale-95 text-xs md:text-sm">
+                        <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
                         WhatsApp Directo
                     </a>
                 </div>
 
-                <button onclick="location.reload()" class="block mx-auto pt-6 text-gray-500 hover:text-white text-[10px] uppercase font-bold tracking-widest transition-all">
+                <button onclick="location.reload()" class="block mx-auto pt-6 text-gray-500 hover:text-white text-[9px] md:text-[10px] uppercase font-bold tracking-widest transition-all underline decoration-white/20">
                     Realizar otro registro
                 </button>
             </div>
@@ -245,43 +259,69 @@
             SERVICE_ID: "service_3klautu",
             TEMPLATE_ID: "template_iehssaf"
         };
-
         if (CONFIG.PUBLIC_KEY !== "TU_PUBLIC_KEY") emailjs.init(CONFIG.PUBLIC_KEY);
 
         const form = document.getElementById('form-imglome');
         const mainLogo = document.getElementById('main-logo');
+        const progressBar = document.getElementById('progress-bar');
+        const loadingText = document.getElementById('loading-text');
+
+        // Generar sonido sutil de éxito vía síntesis (sin archivos externos)
+        const playSuccessSound = () => {
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = context.createOscillator();
+            const gain = context.createGain();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(880, context.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(1320, context.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, context.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+            oscillator.connect(gain);
+            gain.connect(context.destination);
+            oscillator.start();
+            oscillator.stop(context.currentTime + 0.5);
+        };
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             document.getElementById('registration-view').classList.add('hidden');
             document.getElementById('loading-view').classList.remove('hidden');
             
-            const nombre = document.getElementById('input-nombre').value;
-            const email = document.getElementById('input-email').value;
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                if(progress <= 90) {
+                    progressBar.style.width = progress + '%';
+                    if(progress === 40) loadingText.innerText = "Enviando correo...";
+                    if(progress === 70) loadingText.innerText = "Finalizando registro...";
+                }
+            }, 100);
 
             try {
                 await emailjs.send(CONFIG.SERVICE_ID, CONFIG.TEMPLATE_ID, {
-                    to_email: email,
-                    to_name: nombre,
+                    to_email: document.getElementById('input-email').value,
+                    to_name: document.getElementById('input-nombre').value,
                     rol: "Participante General", 
-                    tipo_doc: document.getElementById('input-tipo-doc').value,
                     num_doc: document.getElementById('input-numero-doc').value,
                     ap_paterno: document.getElementById('input-apellido-paterno').value,
-                    ap_materno: document.getElementById('input-apellido-materno').value,
                     celular: document.getElementById('input-celular').value,
                     cargo: document.getElementById('input-cargo').value,
                     especialidad: document.getElementById('input-especialidad').value
                 });
                 
-                document.getElementById('loading-view').classList.add('hidden');
-                document.getElementById('success-view').classList.remove('hidden');
-                document.getElementById('display-name').innerText = nombre;
+                clearInterval(interval);
+                progressBar.style.width = '100%';
                 
-                mainLogo.classList.add('logo-success-anim');
-                
+                setTimeout(() => {
+                    playSuccessSound();
+                    document.getElementById('loading-view').classList.add('hidden');
+                    document.getElementById('success-view').classList.remove('hidden');
+                    document.getElementById('display-name').innerText = document.getElementById('input-nombre').value;
+                    mainLogo.classList.add('logo-success-anim');
+                }, 500);
             } catch (error) {
-                alert("Error al enviar el registro. Por favor intente de nuevo.");
+                clearInterval(interval);
+                alert("Error al enviar. Intente de nuevo.");
                 document.getElementById('loading-view').classList.add('hidden');
                 document.getElementById('registration-view').classList.remove('hidden');
             }
@@ -289,12 +329,12 @@
 
         particlesJS("particles-js", {
             "particles": {
-                "number": { "value": 80 },
+                "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
                 "color": { "value": "#4ade80" },
                 "shape": { "type": "circle" },
                 "opacity": { "value": 0.3 },
                 "size": { "value": 2.5 },
-                "line_linked": { "enable": true, "distance": 150, "color": "#22d3ee", "opacity": 0.2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#22d3ee", "opacity": 0.15 },
                 "move": { "enable": true, "speed": 1 }
             }
         });

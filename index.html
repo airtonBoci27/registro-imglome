@@ -207,8 +207,13 @@
                             <option>Medicina Física y Rehabilitación</option>
                             <option>Terapia Física y Rehabilitación</option>
                             <option>Medicina Deportiva</option>
-                            <option>Otro</option>
+                            <option value="Otro">Otro</option>
                         </select>
+                    </div>
+
+                    <div id="container-otra-especialidad" class="hidden animate-pulse">
+                        <label class="text-[9px] md:text-[10px] font-bold text-cyan-400 uppercase ml-1">Especificar Especialidad</label>
+                        <input type="text" id="input-otra-especialidad" placeholder="Ej. Cardiología" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm border-cyan-500/30">
                     </div>
 
                      <div class="flex items-center justify-center pt-4 md:pt-6">
@@ -257,6 +262,21 @@
         const mainLogo = document.getElementById('main-logo');
         const progressBar = document.getElementById('progress-bar');
         const loadingText = document.getElementById('loading-text');
+        const selectEspecialidad = document.getElementById('input-especialidad');
+        const containerOtra = document.getElementById('container-otra-especialidad');
+        const inputOtra = document.getElementById('input-otra-especialidad');
+
+        // LÓGICA PARA MOSTRAR/OCULTAR CUADRO DE "OTRO"
+        selectEspecialidad.addEventListener('change', function() {
+            if (this.value === "Otro") {
+                containerOtra.classList.remove('hidden');
+                inputOtra.setAttribute('required', 'true');
+            } else {
+                containerOtra.classList.add('hidden');
+                inputOtra.removeAttribute('required');
+                inputOtra.value = "";
+            }
+        });
 
         const playSuccessSound = () => {
             const context = new (window.AudioContext || window.webkitAudioContext)();
@@ -275,6 +295,12 @@
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            // Determinar qué valor de especialidad enviar
+            const especialidadFinal = selectEspecialidad.value === "Otro" 
+                ? inputOtra.value 
+                : selectEspecialidad.value;
+
             document.getElementById('registration-view').classList.add('hidden');
             document.getElementById('loading-view').classList.remove('hidden');
             
@@ -298,7 +324,7 @@
                     ap_materno: document.getElementById('input-apellido-materno').value,
                     celular: document.getElementById('input-celular').value,
                     cargo: document.getElementById('input-cargo').value,
-                    especialidad: document.getElementById('input-especialidad').value
+                    especialidad: especialidadFinal // Se envía la especialidad filtrada
                 });
                 
                 clearInterval(interval);

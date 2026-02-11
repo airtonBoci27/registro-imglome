@@ -127,16 +127,12 @@
                             <svg class="w-4 h-4 md:w-5 md:h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             <span class="text-[8px] md:text-[10px] uppercase font-bold text-gray-400 tracking-widest">Horario</span>
                         </div>
-                        <div class="flex items-end justify-center gap-1">
-                            <div class="text-center">
-                                <p class="text-white text-base md:text-xl font-800 leading-none">08:00</p>
-                                <p class="text-green-300 text-[7px] md:text-[9px] font-semibold uppercase mt-0.5">AM</p>
-                            </div>
-                            <span class="text-white text-base md:text-xl font-800 pb-0.5 md:pb-2">-</span>
-                            <div class="text-center">
-                                <p class="text-white text-base md:text-xl font-800 leading-none">19:00</p>
-                                <p class="text-green-300 text-[7px] md:text-[9px] font-semibold uppercase mt-0.5">PM</p>
-                            </div>
+                        <div class="flex items-baseline justify-center">
+                            <p class="text-white text-sm md:text-lg font-800 leading-none whitespace-nowrap">
+                                08:00<span class="text-[7px] md:text-[9px] text-gray-400 ml-0.5">AM</span> 
+                                <span class="text-green-300 text-[9px] md:text-xs font-semibold mx-1">a</span> 
+                                19:00<span class="text-[7px] md:text-[9px] text-gray-400 ml-0.5">PM</span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -266,7 +262,6 @@
         const containerOtra = document.getElementById('container-otra-especialidad');
         const inputOtra = document.getElementById('input-otra-especialidad');
 
-        // LÓGICA PARA MOSTRAR/OCULTAR CUADRO DE "OTRO"
         selectEspecialidad.addEventListener('change', function() {
             if (this.value === "Otro") {
                 containerOtra.classList.remove('hidden');
@@ -296,7 +291,6 @@
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // Determinar qué valor de especialidad enviar
             const especialidadFinal = selectEspecialidad.value === "Otro" 
                 ? inputOtra.value 
                 : selectEspecialidad.value;
@@ -324,7 +318,7 @@
                     ap_materno: document.getElementById('input-apellido-materno').value,
                     celular: document.getElementById('input-celular').value,
                     cargo: document.getElementById('input-cargo').value,
-                    especialidad: especialidadFinal // Se envía la especialidad filtrada
+                    especialidad: especialidadFinal
                 });
                 
                 clearInterval(interval);

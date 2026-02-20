@@ -102,7 +102,7 @@
             </div>
 
              <div class="space-y-3 md:space-y-4">
-                <a href="https://maps.app.goo.gl/eNLaRD1k49A1aySK8" target="_blank" class="info-card p-4 md:p-6 rounded-2xl md:rounded-3xl flex items-center gap-4 md:gap-6 block transition-all hover:border-green-400">
+                <a href="https://www.google.com/maps/dir//Sheraton+Lima+Historic+Center,+Av.+Paseo+de+la+Rep%C3%BAblica+170,+Lima+15001/@-12.0595285,-77.0369033,17z/data=!4m8!4m7!1m0!1m5!1m1!1s0x9105c8c6d103eef1:0x21e996eeb5d06b7d!2m2!1d-77.0370224!2d-12.0572872?entry=ttu&g_ep=EgoyMDI2MDIxMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="info-card p-4 md:p-6 rounded-2xl md:rounded-3xl flex items-center gap-4 md:gap-6 block transition-all hover:border-green-400">
                     <div class="bg-green-500/20 p-3 md:p-4 rounded-xl md:rounded-2xl text-green-400 shrink-0">
                         <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </div>
@@ -154,13 +154,13 @@
                             <div class="w-1/3">
                                 <label class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase ml-1">Tipo</label>
                                 <select id="input-tipo-doc" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
-                                    <option>DNI</option>
-                                    <option>C.E.</option>
+                                    <option value="DNI">DNI</option>
+                                    <option value="C.E.">C.E.</option>
                                 </select>
                             </div>
                             <div class="w-2/3">
                                 <label class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase ml-1">Número</label>
-                                <input type="number" id="input-numero-doc" required placeholder="74859612" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
+                                <input type="text" id="input-numero-doc" required placeholder="74859612" class="input-glass w-full rounded-xl p-3 text-xs md:text-sm">
                             </div>
                         </div>
                         <div>
@@ -250,8 +250,10 @@
         const CONFIG = {
             PUBLIC_KEY: "uV9Iq4rvtHdIB149r",
             SERVICE_ID: "service_byi9wv5",
-            TEMPLATE_ID: "template_wmjk82e"
+            TEMPLATE_ID: "template_wmjk82e",
+            SHEETDB_URL: "https://sheetdb.io/api/v1/jk2o3ez13t5bf" // Tu API de SheetDB
         };
+        
         if (CONFIG.PUBLIC_KEY !== "TU_PUBLIC_KEY") emailjs.init(CONFIG.PUBLIC_KEY);
 
         const form = document.getElementById('form-imglome');
@@ -261,6 +263,23 @@
         const selectEspecialidad = document.getElementById('input-especialidad');
         const containerOtra = document.getElementById('container-otra-especialidad');
         const inputOtra = document.getElementById('input-otra-especialidad');
+        
+        const inputNumDoc = document.getElementById('input-numero-doc');
+        const inputTipoDoc = document.getElementById('input-tipo-doc');
+        const inputCelular = document.getElementById('input-celular');
+
+        // Validaciones técnicas de entrada
+        inputNumDoc.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            const maxLen = inputTipoDoc.value === "DNI" ? 8 : 12;
+            if (this.value.length > maxLen) this.value = this.value.slice(0, maxLen);
+        });
+
+        inputCelular.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 0 && this.value[0] !== '9') this.value = '';
+            if (this.value.length > 9) this.value = this.value.slice(0, 9);
+        });
 
         selectEspecialidad.addEventListener('change', function() {
             if (this.value === "Otro") {
@@ -291,9 +310,32 @@
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
+            if(inputNumDoc.value.length < 8) {
+                alert("El documento debe tener al menos 8 dígitos.");
+                return;
+            }
+            if(inputCelular.value.length !== 9) {
+                alert("El celular debe tener 9 dígitos.");
+                return;
+            }
+
             const especialidadFinal = selectEspecialidad.value === "Otro" 
                 ? inputOtra.value 
                 : selectEspecialidad.value;
+
+            const nombreInscrito = document.getElementById('input-nombre').value;
+            const apellidosInscrito = `${document.getElementById('input-apellido-paterno').value} ${document.getElementById('input-apellido-materno').value}`;
+
+            // Datos para SheetDB
+            const rowData = {
+                nombre: nombreInscrito,
+                apellidos: apellidosInscrito,
+                num_doc: inputNumDoc.value,
+                celular: inputCelular.value,
+                email: document.getElementById('input-email').value,
+                especialidad: especialidadFinal,
+                fecha: new Date().toLocaleString()
+            };
 
             document.getElementById('registration-view').classList.add('hidden');
             document.getElementById('loading-view').classList.remove('hidden');
@@ -303,23 +345,33 @@
                 progress += 5;
                 if(progress <= 90) {
                     progressBar.style.width = progress + '%';
-                    if(progress === 40) loadingText.innerText = "Enviando correo...";
-                    if(progress === 70) loadingText.innerText = "Finalizando registro...";
+                    if(progress === 30) loadingText.innerText = "Guardando en tabla...";
+                    if(progress === 60) loadingText.innerText = "Enviando confirmación...";
                 }
             }, 100);
 
             try {
-                await emailjs.send(CONFIG.SERVICE_ID, CONFIG.TEMPLATE_ID, {
-                    to_email: document.getElementById('input-email').value,
-                    to_name: document.getElementById('input-nombre').value,
-                    rol: "Participante General", 
-                    num_doc: document.getElementById('input-numero-doc').value,
-                    ap_paterno: document.getElementById('input-apellido-paterno').value,
-                    ap_materno: document.getElementById('input-apellido-materno').value,
-                    celular: document.getElementById('input-celular').value,
-                    cargo: document.getElementById('input-cargo').value,
-                    especialidad: especialidadFinal
-                });
+                // Ejecución paralela (Mejora de performance)
+                await Promise.all([
+                    // Guardar en Google Sheets via SheetDB
+                    fetch(CONFIG.SHEETDB_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: [rowData] })
+                    }),
+                    // Enviar Correo via EmailJS
+                    emailjs.send(CONFIG.SERVICE_ID, CONFIG.TEMPLATE_ID, {
+                        to_email: document.getElementById('input-email').value,
+                        to_name: nombreInscrito,
+                        rol: "Participante General", 
+                        num_doc: inputNumDoc.value,
+                        ap_paterno: document.getElementById('input-apellido-paterno').value,
+                        ap_materno: document.getElementById('input-apellido-materno').value,
+                        celular: inputCelular.value,
+                        cargo: document.getElementById('input-cargo').value,
+                        especialidad: especialidadFinal
+                    })
+                ]);
                 
                 clearInterval(interval);
                 progressBar.style.width = '100%';
@@ -328,12 +380,13 @@
                     playSuccessSound();
                     document.getElementById('loading-view').classList.add('hidden');
                     document.getElementById('success-view').classList.remove('hidden');
-                    document.getElementById('display-name').innerText = document.getElementById('input-nombre').value;
+                    document.getElementById('display-name').innerText = nombreInscrito;
                     mainLogo.classList.add('logo-success-anim');
                 }, 500);
             } catch (error) {
                 clearInterval(interval);
-                alert("Error al enviar. Intente de nuevo.");
+                console.error("Error:", error);
+                alert("Error en el registro. Intente de nuevo.");
                 document.getElementById('loading-view').classList.add('hidden');
                 document.getElementById('registration-view').classList.remove('hidden');
             }
